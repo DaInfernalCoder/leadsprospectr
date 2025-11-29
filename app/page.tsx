@@ -57,19 +57,21 @@ export default function Home() {
     setLoading(true);
 
     try {
-      const response = await fetch(
-        "https://primary-production-19e5.up.railway.app/webhook/icebreaker",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            company_name: companyName.trim(),
-            website_url: websiteUrl.trim(),
-          }),
-        }
-      );
+      const apiUrl = process.env.NEXT_PUBLIC_API_URL;
+      if (!apiUrl) {
+        throw new Error("API URL is not configured");
+      }
+
+      const response = await fetch(`${apiUrl}/webhook/icebreaker`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          company_name: companyName.trim(),
+          website_url: websiteUrl.trim(),
+        }),
+      });
 
       if (!response.ok) {
         throw new Error(`Request failed: ${response.statusText}`);
